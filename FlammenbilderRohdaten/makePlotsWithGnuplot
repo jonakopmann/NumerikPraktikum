@@ -1,0 +1,24 @@
+#!/usr/bin/gnuplot
+set terminal pngcairo enhanced
+set xrange [0:512]
+set yrange [0:512]
+
+set cblabel "Intensity"
+set xtics nomirror
+set ytics nomirror
+set xtics out
+set ytics out
+set xlabel 'Position/Pixel'
+set ylabel 'Hight/Pixel'
+
+set title "Hauptflamme"
+set out "Hauptflamme.png"
+plot "< cat Hauptflamme.txt | sed --silent '6,$p'" matrix with image
+
+set title "Pilotflamme1"
+set out "Pilotflamme1.png"
+plot "< cat Pilotflamme1.txt | sed --silent '6,$p'" matrix with image
+
+set out "Pilotflamme2.png"
+set title "Pilotflamme2"
+plot "< cat Pilotflamme2.txt | sed --silent '6,$p'" matrix with image
