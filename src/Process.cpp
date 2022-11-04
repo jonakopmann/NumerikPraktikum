@@ -1,4 +1,4 @@
-//#include "Process.h"
+#include "Process.h"
 
 // difference quotient
 double diff(int x, int h, double* values)
