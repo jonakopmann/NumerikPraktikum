@@ -154,6 +154,7 @@ double diff(int x, int h, double* values)
 
 double* Interpolate(double* values, int count, int symmetry)
 {
+    int i;
     return nullptr;
 }
 
