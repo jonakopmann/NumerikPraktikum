@@ -16,8 +16,10 @@ int main()
     {
         0, 1, 2, 3, 4, 5
     };
-    Polynom polynom = PolynomialFit(test, 6, degree);
-    polynom.Print();
+    Polynom* polynom = PolynomialFit(test, 6, degree);
+    polynom->Print();
+
+    delete polynom;
 
     return 0;
 }
