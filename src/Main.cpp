@@ -27,7 +27,9 @@ int main()
     double* values = ReadTestLine(fileName);
 
     Polynom* polynom = PolynomialFit(values, 512, degree);
+#if DEBUG
     polynom->Print();
+#endif
 
     delete polynom;
 
