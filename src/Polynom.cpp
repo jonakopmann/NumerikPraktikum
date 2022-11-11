@@ -33,7 +33,7 @@ void Polynom::Print()
     std::cout << std::endl;
 }
 
-Polynom* PolynomialFit(long double* values, int count, int degree)
+Polynom* PolynomialFit(double* values, int count, int degree)
 {
     long double* X = new long double[2 * degree + 1];
     for (int i = 0; i < 2 * degree + 1;i++)

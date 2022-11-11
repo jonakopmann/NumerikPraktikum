@@ -14,6 +14,6 @@ private:
     long double* coefs;
 };
 
-Polynom* PolynomialFit(long double* values, int count, int degree);
+Polynom* PolynomialFit(double* values, int count, int degree);
 
 #endif

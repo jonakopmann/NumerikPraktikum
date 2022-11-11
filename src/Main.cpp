@@ -2,6 +2,7 @@
 #include <iomanip>
 #include "Process.h"
 #include "Polynom.h"
+#include "IO/Reader.h"
 
 using namespace std;
 
@@ -10,13 +11,22 @@ int main()
     // set up cout
     cout.precision(15);
     cout.setf(ios::scientific);
-    
-    const int degree = 2;
-    long double* test = new long double[6]
-    {
-        0, 1, 2, 3, 4, 5
-    };
-    Polynom* polynom = PolynomialFit(test, 6, degree);
+
+#if DEBUG
+    const int degree = 3;
+    const char* fileName = "../FlammenbilderRohdaten/Zeile170.txt";
+#else
+    char* fileName;
+    cout << "input file name" << endl;
+    cin >> fileName;
+    int degree;
+    cout << "input degree" << endl;
+    cin >> degree;
+#endif
+
+    double* values = ReadTestLine(fileName);
+
+    Polynom* polynom = PolynomialFit(values, 512, degree);
     polynom->Print();
 
     delete polynom;
