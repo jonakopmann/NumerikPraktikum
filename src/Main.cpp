@@ -1,7 +1,7 @@
-
 #include <iostream>
 #include <iomanip>
 #include "Process.h"
+#include "Polynom.h"
 
 using namespace std;
 

@@ -5,7 +5,7 @@ project(NumerikPraktikum
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(main_files src/Main.cpp src/Process.cpp src/IO/Reader.cpp src/IO/Writer.cpp)
+set(main_files src/Main.cpp src/Process.cpp src/Polynom.cpp src/IO/Reader.cpp src/IO/Writer.cpp)
 
 add_executable(Main ${main_files})
 
