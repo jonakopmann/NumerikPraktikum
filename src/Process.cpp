@@ -1,18 +1,54 @@
+#include <cmath>
+#include <iostream>
+
 #include "Process.h"
 
 // difference quotient
-double diff(int x, int h, double* values)
+double diff(double x, Polynom* polynom)
 {
-    return (values[x + h] - values[x - h]) / (2 * h);
+    return (polynom->Function(x + H) - polynom->Function(x - H)) / (2 * H);
 }
 
-double* Interpolate(double* values, int count, int symmetry)
+double func(double y, double r, Polynom* polynom)
 {
-    int i;
-    return nullptr;
+    return diff(y, polynom) / sqrt((pow(y, 2) - pow(r, 2)));
 }
 
-double* ReConstruct(double* intensity, int count, int radius)
+double midpoint(double a, double b, double n, Polynom* polynom)
+{   
+    double h, y, retVal = 0.0;
+    
+    h = (b - a) / n;
+    if (h == 0)
+    {
+        // a and b are the same
+        return 0;
+    }
+
+    for (int i = 1; i <= n; i++)
+    {
+        y = a - h / 2 + i * h;
+        retVal += func(y, a, polynom);
+    }
+    
+    return h * retVal;
+}
+
+double* Interpolate(double* values, int symmetry)
 {
-    return nullptr;
+    double* retVal = new double[symmetry + 1];
+
+    for (int i = 0; i <= symmetry; i++)
+    {
+        retVal[symmetry - i] = (values[symmetry + i] + values[symmetry - i]) / 2.0;
+    }
+
+    return retVal;
+}
+
+double Convert(Polynom* polynom, int radius, int maxRadius)
+{
+    const double factor = -1.0 / M_PI;
+
+    return factor * midpoint(radius, maxRadius, N, polynom);
 }

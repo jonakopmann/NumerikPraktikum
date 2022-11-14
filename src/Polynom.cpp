@@ -1,36 +1,64 @@
 #include <iostream>
 #include <cmath>
+#include <float.h>
+#include <iomanip>
 #include "Polynom.h"
+
+void printmatrix(long double** matrix, int m, int n)
+{
+
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            std::cout << std::setw(10) << matrix[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
+}
 
 Polynom::Polynom(long double* inCoefs, int inDegree)
 {
-    coefs = inCoefs;
-    n = inDegree + 1;
+    m_coefs = inCoefs;
+    m_n = inDegree + 1;
+    m_h = 0.01;
 }
 
 Polynom::~Polynom()
 {
-    delete[] coefs;
+    delete[] m_coefs;
 }
 
 double Polynom::Function(int x)
 {
     double retVal = 0;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < m_n; i++)
     {
-        retVal += coefs[i] * pow(x, i);
+        retVal += m_coefs[i] * pow(x, i);
     }
     return retVal;
 }
 
 void Polynom::Print()
 {
-    std::cout << coefs[0];
-    for (int i = 1; i < n; i++)
+    std::cout << m_coefs[0];
+    for (int i = 1; i < m_n; i++)
     {
-        std::cout << " + " << coefs[i] << " * x^" << i;
+        std::cout << " + " << m_coefs[i] << " * x^" << i;
     }
     std::cout << std::endl;
+}
+
+double Polynom::GetH()
+{
+    return m_h;
+}
+
+void Polynom::SetH(double value)
+{
+    m_h = value;
 }
 
 Polynom* PolynomialFit(double* values, int count, int degree)
@@ -144,3 +172,88 @@ Polynom* PolynomialFit(double* values, int count, int degree)
     delete[] B;
     return new Polynom(coefs, degree);
 }
+
+int argmax(int start, int end, long double** matrix, int column)
+{
+    long double max = -DBL_MAX;
+    int index = -1;
+    for (int i = start; i < end; i++)
+    {
+        long double d = abs(matrix[i][column]);
+
+        if (d > max)
+        {
+            max = d;
+            index = i;
+        }
+    }
+    return index;
+}
+
+/*Polynom* PolynomialFit(double* values, int count, int degree)
+{
+    long double** matrix = new long double* [degree + 1];
+    for (int m = 0; m < degree + 1; m++)
+    {
+        matrix[m] = new long double[degree + 2];
+
+        double val = 0.0;
+        for (int i = 0; i < count; i++)
+        {
+            val += pow(values[i], m) * values[i];
+        }
+        matrix[m][degree + 1] = val;
+        
+        for (int n = 0; n < degree + 1; n++)
+        {
+            val = 0.0;
+            for (int i = 0; i < count; i++)
+            {
+                val += pow(i, m + n);
+            }
+            matrix[m][n] = val;
+        }
+    }
+    int lead = 0; 
+
+    while (lead < degree + 1) {
+        long double d, m;
+
+        for (int r = 0; r < degree + 1; r++)
+        {
+            // for each row ...
+            // calculate divisor and multiplier
+            d = matrix[lead][lead];
+            m = matrix[r][lead] / matrix[lead][lead];
+
+            for (int c = 0; c < degree + 2; c++)
+            {
+                // for each column ...
+                if (r == lead)
+                {
+                    // make pivot = 1
+                    matrix[r][c] /= d;
+                }              
+                else
+                {
+                    // make other = 0
+                    matrix[r][c] -= matrix[lead][c] * m;
+                }  
+            }
+        }
+
+        lead++;
+#if DEBUG
+        printmatrix(matrix, degree + 1, degree + 2);
+#endif
+    }
+    
+    long double* coefs = new long double[degree + 1];
+
+    for (int i = 0; i < degree + 1; i++)
+    {
+        coefs[i] = matrix[i][degree + 1];
+    }
+
+    return new Polynom(coefs, degree);
+}*/
