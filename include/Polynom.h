@@ -8,13 +8,10 @@ public:
     ~Polynom();
     double Function(int x);
     void Print();
-    double GetH();
-    void SetH(double value);
 
 private:
     int m_n;
     long double* m_coefs;
-    double m_h;
 };
 
 Polynom* PolynomialFit(double* values, int count, int degree);

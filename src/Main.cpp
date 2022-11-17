@@ -29,6 +29,8 @@ int main()
     int degree;
     cout << "input degree" << endl;
     cin >> degree;
+    const int symmetry = SYMMETRY_MAIN;
+    const char* outFileName = "../FlammenbilderRohdaten/out.txt";
 #endif
 
     double** valueArray = ReadFile(fileName);
