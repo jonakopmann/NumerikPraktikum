@@ -1,6 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-double Check(double d);
+long double Check(long double d);
 
 #endif

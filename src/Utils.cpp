@@ -1,8 +1,9 @@
 #include <cmath>
 #include <iostream>
+
 #include "Utils.h"
 
-double Check(double d)
+long double Check(long double d)
 {
     if (std::isnan(d) || !std::isfinite(d))
     {

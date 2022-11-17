@@ -1,8 +1,10 @@
-#include <iostream>
 #include <cmath>
-#include <float.h>
 #include <iomanip>
+#include <iostream>
+#include <float.h>
+
 #include "Polynom.h"
+#include "Utils.h"
 
 void printmatrix(long double** matrix, int m, int n)
 {
@@ -162,7 +164,7 @@ Polynom* PolynomialFit(double* values, int count, int degree)
             }
         }
         //now finally divide the rhs by the coefficient of the variable to be calculated
-        coefs[i] = coefs[i] / B[i][i];
+        coefs[i] = Check(coefs[i] / B[i][i]);
     }
     
     for (int i = 0; i < degree + 1; i++)
