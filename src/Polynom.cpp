@@ -23,7 +23,6 @@ Polynom::Polynom(long double* inCoefs, int inDegree)
 {
     m_coefs = inCoefs;
     m_n = inDegree + 1;
-    m_h = 0.01;
 }
 
 Polynom::~Polynom()
@@ -49,16 +48,6 @@ void Polynom::Print()
         std::cout << " + " << m_coefs[i] << " * x^" << i;
     }
     std::cout << std::endl;
-}
-
-double Polynom::GetH()
-{
-    return m_h;
-}
-
-void Polynom::SetH(double value)
-{
-    m_h = value;
 }
 
 Polynom* PolynomialFit(double* values, int count, int degree)
