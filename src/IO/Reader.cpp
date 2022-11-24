@@ -4,6 +4,9 @@
 
 using namespace std;
 
+/// @brief Read 512 lines from a file with 512 values.
+/// @param fileName Name of the file which gets read.
+/// @return The values as a double matrix.
 double** ReadFile(const char* fileName)
 {
     ifstream stream;
@@ -38,6 +41,9 @@ double** ReadFile(const char* fileName)
     return retVal;
 }
 
+/// @brief Reads one line from a file.
+/// @param fileName Name of the file which gets read.
+/// @return The values as a double array.
 double* ReadTestLine(const char* fileName)
 {
     ifstream stream;
