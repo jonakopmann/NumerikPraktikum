@@ -4,10 +4,7 @@
 
 using namespace std;
 
-/// @brief Read 512 lines from a file with 512 values.
-/// @param fileName Name of the file which gets read.
-/// @return The values as a double matrix.
-double** ReadFile(const char* fileName)
+double** ReadFile(const char* fileName, int* outRowCount, int* outColumnCount)
 {
     ifstream stream;
     stream.open(fileName);
@@ -16,22 +13,28 @@ double** ReadFile(const char* fileName)
     {
         throw runtime_error("Could not open file: " + string(fileName));
     }
-    
-    // skip header for now, maybe later parse it for better compatibility
+
+    // description
     string temp;
     getline(stream, temp);
     getline(stream, temp);
     getline(stream, temp);
+    // get matrix size
+    char c;
+    stream >> c >> c;
+    stream >> *outRowCount;
+    stream >> c >> c >> c;
+    stream >> *outColumnCount;
     getline(stream, temp);
     getline(stream, temp);
 
     // parse values into double**
-    double** retVal = new double*[512];
+    double** retVal = new double*[*outRowCount];
 
-    for (int i = 0; i < 512; i++)
+    for (int i = 0; i < *outRowCount; i++)
     {
-        retVal[i] = new double[512];
-        for (int j = 0; j < 512; j++)
+        retVal[i] = new double[*outColumnCount];
+        for (int j = 0; j < *outColumnCount; j++)
         {
             stream >> retVal[i][j];
         }
@@ -41,9 +44,6 @@ double** ReadFile(const char* fileName)
     return retVal;
 }
 
-/// @brief Reads one line from a file.
-/// @param fileName Name of the file which gets read.
-/// @return The values as a double array.
 double* ReadTestLine(const char* fileName)
 {
     ifstream stream;

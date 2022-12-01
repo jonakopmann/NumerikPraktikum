@@ -17,10 +17,9 @@ int main()
     cout.setf(ios::scientific);
 
 #if DEBUG
-    const int degree = 7;
+    const int degree = 8;
     const char* fileName = "../FlammenbilderRohdaten/Hauptflamme.txt";
-    const double n = 512;
-    const char* outFileName = "../FlammenbilderRohdaten/out.txt";
+    const char* outFileName = "../FlammenbilderRohdaten/Hauptflamme_Radial.txt";
     const int symmetry = SYMMETRY_MAIN;
 #else
     char* fileName;
@@ -32,14 +31,19 @@ int main()
     const int symmetry = SYMMETRY_MAIN;
     const char* outFileName = "../FlammenbilderRohdaten/out.txt";
 #endif
+    
+    cout << "reading in values" << endl;
 
-    double** valueArray = ReadFile(fileName);
+    int rowCount, columnCount;
+    double** valueArray = ReadFile(fileName, &rowCount, &columnCount);
 
     int maxRad = symmetry;
-    double** reconstructed = new double*[512];
+    double** reconstructed = new double*[rowCount];
+    
+    cout << "processing values" << endl;
 
-    cout << "reading in values" << endl;
-    for (int i = 0; i < 512; i++)
+    long double maxDiff = -__DBL_MAX__, diff = 0;
+    for (int i = 0; i < rowCount; i++)
     {
         double* values = valueArray[i];
 
@@ -47,15 +51,20 @@ int main()
 
         Polynom* polynom = PolynomialFit(interpolated, symmetry + 1, degree);
 
-        /*for (int i = 0; i < SYMMETRY_MAIN + 1; i++)
-        {
-            cout << interpolated[i] << "    " << polynom->Function(i) << endl;
-        }*/
-
 #if DEBUG
-        polynom->Print();
+        //polynom->Print();
+        
+        // diff between polynom and real values
+        for (int i = 0; i < symmetry + 1; i++)
+        {
+            diff += abs(interpolated[i] - polynom->Function(i));
+            //if (diff > maxDiff)
+            {
+                //maxDiff = diff;
+            }
+        }
 #endif
-        cout << "processing values" << endl;
+        
         reconstructed[i] = new double[maxRad * 2 + 1];
         for (int r = 0; r <= maxRad; r++)
         {
@@ -67,12 +76,16 @@ int main()
 
         delete[] interpolated;
     }
-    
-    WriteFile(outFileName, reconstructed, 512, maxRad * 2 + 1);
+
+#if DEBUG
+    cout << "diff: " << diff / (rowCount * symmetry + 1) << endl;
+#endif
+
+    WriteFile(outFileName, reconstructed, rowCount, maxRad * 2 + 1);
 
     cout << "data written to " << outFileName << endl;
     
-    for (int i = 0; i < 512; i++)
+    for (int i = 0; i < rowCount; i++)
     {
         delete[] valueArray[i];
         delete[] reconstructed[i];
