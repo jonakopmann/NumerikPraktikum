@@ -84,7 +84,8 @@ int main()
 #endif
 
     WriteFile(outFileName, reconstructed, rowCount, maxRad * 2 + 1);
-    
+    WritePlotFile("../FlammenbilderRohdaten/gnuplot", outFileName, "test.png", rowCount, maxRad * 2 + 1);
+
     cout << "data written to " << outFileName << endl;
     
     for (int i = 0; i < rowCount; i++)
