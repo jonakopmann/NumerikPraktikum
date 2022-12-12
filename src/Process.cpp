@@ -1,4 +1,4 @@
-#include <cmath>
+#include <math.h>
 #include <iostream>
 
 #include "Process.h"
@@ -11,29 +11,56 @@ double diff(double x, Polynom* polynom)
 
 double func(double y, double r, Polynom* polynom)
 {
-    return diff(y, polynom) / sqrt((pow(y, 2) - pow(r, 2)));
+    return diff(y, polynom) / sqrt(pow(y, 2) - pow(r, 2));
 }
 
 double midpoint(double a, double b, double n, Polynom* polynom)
 {   
-    double h, y, retVal = 0.0;
-    
-    h = (b - a) / n;
+    double y, retVal = 0.0;
+
+    double h = (b - a) / n;
     if (h == 0)
     {
-        // a and b are the same
+        // upper and lower bound are the same
         return 0;
     }
 
-    for (int i = 1; i <= n; i++)
+    for (int i = 0; i < h; i++)
     {
-        y = a - h / 2 + i * h;
+        y = a + (i + 0.5) * h;
         retVal += func(y, a, polynom);
     }
     
     return h * retVal;
 }
 
+double avg(double* values, int index, int n)
+{
+    double retVal = 0.0;
+    for (int i = -n; i <= n; i++)
+    {
+        retVal += values[index - i];
+    }
+    return (1.0 / (2 * n + 1)) * retVal;
+}
+
+/// @brief 
+/// @param values 
+/// @param count 
+/// @param width 
+void Smooth(double* values, int count, int width)
+{
+    int n = (width - 1) / 2;
+    for (int i = n; i < count - n; i++)
+    {
+        values[i] = avg(values, i, n);
+    }
+}
+
+/// @brief 
+/// @param values 
+/// @param symmetry 
+/// @return 
 double* Interpolate(double* values, int symmetry)
 {
     double* retVal = new double[symmetry + 1];
@@ -46,6 +73,11 @@ double* Interpolate(double* values, int symmetry)
     return retVal;
 }
 
+/// @brief 
+/// @param polynom 
+/// @param radius 
+/// @param maxRadius 
+/// @return 
 double Convert(Polynom* polynom, int radius, int maxRadius)
 {
     const double factor = -1.0 / M_PI;

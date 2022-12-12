@@ -6,8 +6,10 @@
 #define SYMMETRY_MAIN 254
 #define SYMMETRY_PILOT 248
 
-#define N 500
-#define H 0.01
+#define N 10
+#define H 0.1
+
+void Smooth(double* values, int count, int degree);
 
 double* Interpolate(double* values, int symmetry);
 

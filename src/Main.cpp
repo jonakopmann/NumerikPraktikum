@@ -17,7 +17,7 @@ int main()
     cout.setf(ios::scientific);
 
 #if DEBUG
-    const int degree = 8;
+    const int degree = 7;
     const char* fileName = "../FlammenbilderRohdaten/Hauptflamme.txt";
     const char* outFileName = "../FlammenbilderRohdaten/Hauptflamme_Radial.txt";
     const int symmetry = SYMMETRY_MAIN;
@@ -35,7 +35,7 @@ int main()
     cout << "reading in values" << endl;
 
     int rowCount, columnCount;
-    double** valueArray = ReadFile(fileName, &rowCount, &columnCount);
+    double** transverseDistribution = ReadFile(fileName, &rowCount, &columnCount);
 
     int maxRad = symmetry;
     double** reconstructed = new double*[rowCount];
@@ -45,10 +45,12 @@ int main()
     long double maxDiff = -__DBL_MAX__, diff = 0;
     for (int i = 0; i < rowCount; i++)
     {
-        double* values = valueArray[i];
+        double* row = transverseDistribution[i];
 
-        double* interpolated = Interpolate(values, symmetry);
+        double* interpolated = Interpolate(row, symmetry);
 
+        Smooth(interpolated, symmetry + 1, 9);
+        
         Polynom* polynom = PolynomialFit(interpolated, symmetry + 1, degree);
 
 #if DEBUG
@@ -73,7 +75,7 @@ int main()
         }
 
         delete polynom;
-
+        
         delete[] interpolated;
     }
 
@@ -82,15 +84,15 @@ int main()
 #endif
 
     WriteFile(outFileName, reconstructed, rowCount, maxRad * 2 + 1);
-
+    
     cout << "data written to " << outFileName << endl;
     
     for (int i = 0; i < rowCount; i++)
     {
-        delete[] valueArray[i];
+        delete[] transverseDistribution[i];
         delete[] reconstructed[i];
     }
-    delete[] valueArray;
+    delete[] transverseDistribution;
     delete[] reconstructed;
 
     return 0;
