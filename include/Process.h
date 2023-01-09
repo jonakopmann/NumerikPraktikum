@@ -6,8 +6,10 @@
 #define SYMMETRY_MAIN 254
 #define SYMMETRY_PILOT 248
 
-#define N 10
+#define N 0.1
 #define H 0.1
+
+double midpoint(double a, double b, Polynom* polynom);
 
 void Smooth(double* values, int count, int degree);
 

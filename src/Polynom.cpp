@@ -32,7 +32,7 @@ Polynom::~Polynom()
     delete[] m_coefs;
 }
 
-double Polynom::Function(int x)
+double Polynom::Function(double x)
 {
     double retVal = 0;
     for (int i = 0; i < m_n; i++)
@@ -52,6 +52,11 @@ void Polynom::Print()
     std::cout << std::endl;
 }
 
+/// @brief 
+/// @param values 
+/// @param count 
+/// @param degree 
+/// @return 
 Polynom* PolynomialFit(double* values, int count, int degree)
 {
     long double** matrix = new long double* [degree + 1];

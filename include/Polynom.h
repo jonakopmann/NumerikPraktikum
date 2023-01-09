@@ -6,7 +6,7 @@ class Polynom
 public:
     Polynom(long double* inCoefs, int inDegree);
     ~Polynom();
-    double Function(int x);
+    double Function(double x);
     void Print();
 
 private:

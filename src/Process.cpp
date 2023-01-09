@@ -14,18 +14,14 @@ double func(double y, double r, Polynom* polynom)
     return diff(y, polynom) / sqrt(pow(y, 2) - pow(r, 2));
 }
 
-double midpoint(double a, double b, double n, Polynom* polynom)
+double midpoint(double a, double b, Polynom* polynom)
 {   
     double y, retVal = 0.0;
 
-    double h = (b - a) / n;
-    if (h == 0)
-    {
-        // upper and lower bound are the same
-        return 0;
-    }
+    double h = H;
+    double n = (b - a) / H;
 
-    for (int i = 0; i < h; i++)
+    for (int i = 0; i < n; i++)
     {
         y = a + (i + 0.5) * h;
         retVal += func(y, a, polynom);
@@ -39,7 +35,7 @@ double avg(double* values, int index, int n)
     double retVal = 0.0;
     for (int i = -n; i <= n; i++)
     {
-        retVal += values[index - i];
+        retVal += values[index + i];
     }
     return (1.0 / (2 * n + 1)) * retVal;
 }
@@ -51,7 +47,7 @@ double avg(double* values, int index, int n)
 void Smooth(double* values, int count, int width)
 {
     int n = (width - 1) / 2;
-    for (int i = n; i < count - n; i++)
+    for (int i = n; i <= count - n; i++)
     {
         values[i] = avg(values, i, n);
     }
@@ -82,5 +78,5 @@ double Convert(Polynom* polynom, int radius, int maxRadius)
 {
     const double factor = -1.0 / M_PI;
 
-    return factor * midpoint(radius, maxRadius, N, polynom);
+    return factor * midpoint(radius, maxRadius, polynom);
 }
