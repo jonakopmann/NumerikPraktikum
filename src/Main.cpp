@@ -8,7 +8,7 @@
 #include "Utils.h"
 
 using namespace std;
-
+// Funktion für Progressbar
 void printProgress(double progress, int barWidth)
 {
     std::cout << "[";
@@ -34,7 +34,6 @@ void printProgress(double progress, int barWidth)
 
 int main()
 {
-    // set up cout
     cout.precision(15);
     cout.setf(ios::scientific);
 
@@ -45,29 +44,29 @@ int main()
     const int deleteValues = 10;
     const int width = 9;
 #else
-    // name of the file where the data is stored
+    // Name des Files, wo Werte gespeichert werden
     string fileName;
     cout << "input file name" << endl;
     cin >> fileName;
 
-    // degree of the polynom
+    // Polynomgrad
     int degree;
     cout << "input degree for polynom" << endl;
     cin >> degree;
 
-    // width for smoothing
+    // Breite für Glättung
     int width;
     cout << "input width for smoothing" << endl;
     cin >> width;
 
-    // number of values from the middle which should get deleted
+    // Anzahl der Werte an der Symmetrieachse, die gelöscht werden sollen
     int deleteValues;
     cout << "input deleteValues" << endl;
     cin >> deleteValues;
 
-    // symmetry axis of the flame
+    // Symmetrieachse der Flamme
     int symmetry;
-    if (string(fileName).find("Hauptlamme") != -1)
+    if (fileName.find("Hauptflamme") != -1)
     {
         symmetry = SYMMETRY_MAIN;
     }
@@ -77,19 +76,19 @@ int main()
     }
 #endif
 
-    // name of the file that gets written with the newly calculated values
+    // Name der Datei der Radialverteilung
     const char* outFileName = "../FlammenbilderRohdaten/out.txt";
     
     cout << "reading in values ...";
 
-    // read the values of the distribution from the file into an array and parse the row/column count
+    // Herausfinden der Dimension und Einlesen der Werte in ein Array für Querverteilung
     int rowCount, columnCount;
     long double** transverseDistribution = ReadFile(fileName, &rowCount, &columnCount);
     
-    // the maximum radius is the same as the symmetry axis
+    // Maximaler Radius und Symmetrieachse stimmen überein
     int maxRad = symmetry;
 
-    // array to hold in the reconstructed distribution
+    // Array für die Radialverteilung
     long double** reconstructed = new long double* [rowCount];
     
     cout << "\rprocessing values:" << endl;
@@ -98,12 +97,12 @@ int main()
     {
         // progress bar
         printProgress(double(i + 1) / rowCount, 70);
-        
-        long double* row = transverseDistribution[i];
 
-        long double* interpolated = Interpolate(row, symmetry);
+        // Werte Mitteln und Halbieren
+        long double* interpolated = Interpolate(transverseDistribution[i], symmetry);
 
-        Smooth(interpolated, symmetry + 1, 9);
+        // Glättung
+        Smooth(interpolated, symmetry + 1, width);
 
         Polynom* polynom = PolynomialFit(interpolated, symmetry + 1, degree);
 

@@ -3,11 +3,11 @@
 
 #include "Process.h"
 
-/// @brief 
-/// @param values 
-/// @param index 
-/// @param n 
-/// @return 
+/// @brief Glätten eines Wertes aus einem Array
+/// @param values Array der Werte
+/// @param index Werte, der gerade geglättet wird
+/// @param n Anzahl der Werte links und rechts davon
+/// @return geglätteter Wert
 long double avg(long double* values, int index, int n)
 {
     long double retVal = 0.0;

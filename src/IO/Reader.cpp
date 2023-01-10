@@ -18,10 +18,10 @@ long double** ReadFile(string fileName, int* outRowCount, int* outColumnCount)
 
     if (stream.fail())
     {
-        throw runtime_error("Could not open file: " + string(fileName));
+        throw runtime_error("Could not open file: " + fileName);
     }
     
-    // description
+    // Beschreibung überspringen (5 Zeilen)
     string temp;
     getline(stream, temp);
     getline(stream, temp);
@@ -29,16 +29,17 @@ long double** ReadFile(string fileName, int* outRowCount, int* outColumnCount)
     getline(stream, temp);
     getline(stream, temp);
 
-    std::streampos startPos = stream.tellg();
+    std::streampos startPos = stream.tellg();     
 
-    string s;
-    while (getline(stream, s))
+    // Reihenanzahl bestimmen
+    while (getline(stream, temp))
     {
         (*outRowCount)++;
     }
 
+    // Werte in Vektor einlesen und Spaltenanzahl bestimmen
     stream.clear();
-    stream.seekg(startPos);
+    stream.seekg(startPos);            
     std::vector<double> values;
 
     double d;
@@ -46,11 +47,15 @@ long double** ReadFile(string fileName, int* outRowCount, int* outColumnCount)
     {
         values.push_back(d);
     }
+    if (values.size() % *outRowCount != 0)
+    {
+         throw runtime_error("input file does not have the right format!");
+    }
     *outColumnCount = values.size() / *outRowCount;
 
     stream.close();
 
-    // parse values into array
+    // Werte aus Vektor in Array schreiben
     long double** retVal = new long double*[*outRowCount];
     for (int i = 0, t = 0; i < *outRowCount; i++)
     {
