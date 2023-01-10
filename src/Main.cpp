@@ -97,7 +97,7 @@ int main()
     for (int i = 0; i < rowCount; i++)
     {
         // progress bar
-        printProgress(i / double(rowCount - 1), 70);
+        printProgress(double(i + 1) / rowCount, 70);
         
         long double* row = transverseDistribution[i];
 
