@@ -6,21 +6,6 @@
 #include "Polynom.h"
 #include "Utils.h"
 
-void printmatrix(long double** matrix, int m, int n)
-{
-
-    for (int i = 0; i < m; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            std::cout << std::setw(10) << matrix[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    std::cout << std::endl;
-}
-
 Polynom::Polynom(long double* inCoefs, int inDegree)
 {
     m_coefs = inCoefs;
@@ -32,6 +17,9 @@ Polynom::~Polynom()
     delete[] m_coefs;
 }
 
+/// @brief 
+/// @param x 
+/// @return 
 long double Polynom::Function(long double x)
 {
     double retVal = 0;
@@ -42,6 +30,7 @@ long double Polynom::Function(long double x)
     return retVal;
 }
 
+/// @brief 
 void Polynom::Print()
 {
     std::cout << m_coefs[0];
@@ -66,7 +55,7 @@ Polynom* PolynomialFit(long double* values, int count, int degree)
         for (int j = 0; j < count; j++)
         {
             //consecutive positions of the array will store N,sigma(xi),sigma(xi^2),sigma(xi^3)....sigma(xi^2n)
-            X[i] += pow(count - j - 1, i);
+            X[i] += pow(count -1 - j, i);
         }
     }
 
@@ -81,31 +70,21 @@ Polynom* PolynomialFit(long double* values, int count, int degree)
             B[i][j] = X[i + j];
         }
     }
-
     delete[] X;
-
-    //Array to store the values of sigma(yi),sigma(xi*yi),sigma(xi^2*yi)...sigma(xi^n*yi)
-    long double* Y = new long double[degree + 1];
-    for (int i = 0;i < degree + 1;i++)
-    {    
-        Y[i] = 0;
-        for (int j = 0;j < count;j++)
+    
+    for (int i = 0; i < degree + 1; i++)
+    {
+        B[i][degree + 1] = 0;
+        for (int j = 0; j < count;j++)
         {
             //consecutive positions will store sigma(yi),sigma(xi*yi),sigma(xi^2*yi)...sigma(xi^n*yi)
-            Y[i] += pow(count - j - 1, i) * values[j];
+            B[i][degree + 1] += pow(count - 1 - j, i) * values[j];
         }
     }
-    for (int i = 0; i <= degree; i++)
-    {
-        //load the values of Y as the last column of B(Normal Matrix but augmented)
-        B[i][degree + 1] = Y[i];
-    }
-
-    delete[] Y;  
 
     int n = degree + 1;
 
-    //From now Gaussian Elimination starts(can be ignored) to solve the set of linear equations (Pivotisation)
+    //From now Gaussian Elimination starts to solve the set of linear equations
     for (int i = 0; i < n; i++)
     {
         for (int k = i + 1; k < n; k++)

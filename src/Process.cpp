@@ -3,6 +3,11 @@
 
 #include "Process.h"
 
+/// @brief 
+/// @param values 
+/// @param index 
+/// @param n 
+/// @return 
 long double avg(long double* values, int index, int n)
 {
     long double retVal = 0.0;
@@ -13,12 +18,20 @@ long double avg(long double* values, int index, int n)
     return (1.0 / (2 * n + 1)) * retVal;
 }
 
-// difference quotient
+/// @brief 
+/// @param x 
+/// @param polynom 
+/// @return 
 long double diff(long double x, Polynom* polynom)
 {
     return (polynom->Function(x + H) - polynom->Function(x - H)) / (2 * H);
 }
 
+/// @brief 
+/// @param y 
+/// @param r 
+/// @param polynom 
+/// @return 
 long double func(long double y, long double r, Polynom* polynom)
 {
     long double d = diff(y, polynom);
