@@ -4,6 +4,11 @@
 
 using namespace std;
 
+/// @brief 
+/// @param fileName 
+/// @param values 
+/// @param counti 
+/// @param countj 
 void WriteFile(const char* fileName, long double** values, int counti, int countj)
 {
     ofstream stream;
@@ -25,6 +30,12 @@ void WriteFile(const char* fileName, long double** values, int counti, int count
     stream.close();
 }
 
+/// @brief 
+/// @param fileName 
+/// @param dataFileName 
+/// @param outFileName 
+/// @param rowCount 
+/// @param columnCount 
 void WritePlotFile(const char* fileName, const char* dataFileName, const char* outFileName, int rowCount, int columnCount)
 {
     ofstream stream;

@@ -40,13 +40,13 @@ int main()
 
 #if DEBUG
     const int degree = 9;
-    const char* fileName = "../FlammenbilderRohdaten/Hauptflamme.txt";
+    string fileName = "../FlammenbilderRohdaten/Hauptflamme.txt";
     const int symmetry = SYMMETRY_MAIN;
     const int deleteValues = 10;
     const int width = 9;
 #else
     // name of the file where the data is stored
-    char* fileName;
+    string fileName;
     cout << "input file name" << endl;
     cin >> fileName;
 
@@ -85,7 +85,7 @@ int main()
     // read the values of the distribution from the file into an array and parse the row/column count
     int rowCount, columnCount;
     long double** transverseDistribution = ReadFile(fileName, &rowCount, &columnCount);
-
+    
     // the maximum radius is the same as the symmetry axis
     int maxRad = symmetry;
 
