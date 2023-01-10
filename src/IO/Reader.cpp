@@ -46,7 +46,9 @@ long double** ReadFile(string fileName, int* outRowCount, int* outColumnCount)
     {
         values.push_back(d);
     }
-    *outColumnCount =  values.size() / *outRowCount;
+    *outColumnCount = values.size() / *outRowCount;
+
+    stream.close();
 
     // parse values into array
     long double** retVal = new long double*[*outRowCount];
