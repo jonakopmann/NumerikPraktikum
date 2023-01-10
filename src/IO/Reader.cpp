@@ -9,7 +9,7 @@ using namespace std;
 /// @param outRowCount The row count of the matrix.
 /// @param outColumnCount The column count of the matrix.
 /// @return The values as a double matrix.
-double** ReadFile(const char* fileName, int* outRowCount, int* outColumnCount)
+long double** ReadFile(const char* fileName, int* outRowCount, int* outColumnCount)
 {
     ifstream stream;
     stream.open(fileName);
@@ -24,6 +24,7 @@ double** ReadFile(const char* fileName, int* outRowCount, int* outColumnCount)
     getline(stream, temp);
     getline(stream, temp);
     getline(stream, temp);
+
     // get matrix size
     char c;
     stream >> c >> c;
@@ -34,11 +35,11 @@ double** ReadFile(const char* fileName, int* outRowCount, int* outColumnCount)
     getline(stream, temp);
 
     // parse values into double**
-    double** retVal = new double*[*outRowCount];
+    long double** retVal = new long double*[*outRowCount];
 
     for (int i = 0; i < *outRowCount; i++)
     {
-        retVal[i] = new double[*outColumnCount];
+        retVal[i] = new long double[*outColumnCount];
         for (int j = 0; j < *outColumnCount; j++)
         {
             stream >> retVal[i][j];

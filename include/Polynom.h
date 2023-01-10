@@ -6,7 +6,7 @@ class Polynom
 public:
     Polynom(long double* inCoefs, int inDegree);
     ~Polynom();
-    double Function(double x);
+    long double Function(long double x);
     void Print();
 
 private:
@@ -14,6 +14,6 @@ private:
     long double* m_coefs;
 };
 
-Polynom* PolynomialFit(double* values, int count, int degree);
+Polynom* PolynomialFit(long double* values, int count, int degree);
 
 #endif

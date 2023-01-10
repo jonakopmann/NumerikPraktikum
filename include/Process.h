@@ -8,13 +8,12 @@
 
 #define N 0.1
 #define H 0.1
+#define DY 0.1
 
-double midpoint(double a, double b, Polynom* polynom);
+long double* Interpolate(long double* values, int symmetry);
 
-void Smooth(double* values, int count, int degree);
+void Smooth(long double* values, int count, int degree);
 
-double* Interpolate(double* values, int symmetry);
-
-double Convert(Polynom* polynom, int radius, int maxRadius);
+long double Convert(Polynom* polynom, int radius, int maxRadius);
 
 #endif

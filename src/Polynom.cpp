@@ -32,7 +32,7 @@ Polynom::~Polynom()
     delete[] m_coefs;
 }
 
-double Polynom::Function(double x)
+long double Polynom::Function(long double x)
 {
     double retVal = 0;
     for (int i = 0; i < m_n; i++)
@@ -57,83 +57,115 @@ void Polynom::Print()
 /// @param count 
 /// @param degree 
 /// @return 
-Polynom* PolynomialFit(double* values, int count, int degree)
-{
-    long double** matrix = new long double* [degree + 1];
-    for (int m = 0; m < degree + 1; m++)
+Polynom* PolynomialFit(long double* values, int count, int degree)
+{       
+    long double* X = new long double[2 * degree + 1];
+    for (int i = 0; i < 2 * degree + 1;i++)
     {
-        matrix[m] = new long double[degree + 2];
-
-        double val = 0.0;
-        for (int i = 0; i < count; i++)
+        X[i] = 0;
+        for (int j = 0; j < count; j++)
         {
-            val += pow(i, m) * values[i];
-        }
-        matrix[m][degree + 1] = val;
-        
-        for (int n = 0; n < degree + 1; n++)
-        {
-            val = 0.0;
-            for (int i = 0; i < count; i++)
-            {
-                val += pow(i, m + n);
-            }
-            matrix[m][n] = val;
+            //consecutive positions of the array will store N,sigma(xi),sigma(xi^2),sigma(xi^3)....sigma(xi^2n)
+            X[i] += pow(count - j - 1, i);
         }
     }
 
-    int n = degree + 1;
-    for (int i = 0; i < n; i++)
-    {                   
-        for (int j = i + 1; j < n; j++)
+    //B is the Normal matrix(augmented) that will store the equations, 'a' is for value of the final coefficients
+    long double** B = new long double*[degree + 1];
+    for (int i = 0;i <= degree;i++)
+    {
+        B[i] = new long double[degree + 2];
+        for (int j = 0;j <= degree;j++)
         {
-            if(abs(matrix[i][i]) < abs(matrix[j][i]))
+            //Build the Normal matrix by storing the corresponding coefficients at the right positions except the last column of the matrix
+            B[i][j] = X[i + j];
+        }
+    }
+
+    delete[] X;
+
+    //Array to store the values of sigma(yi),sigma(xi*yi),sigma(xi^2*yi)...sigma(xi^n*yi)
+    long double* Y = new long double[degree + 1];
+    for (int i = 0;i < degree + 1;i++)
+    {    
+        Y[i] = 0;
+        for (int j = 0;j < count;j++)
+        {
+            //consecutive positions will store sigma(yi),sigma(xi*yi),sigma(xi^2*yi)...sigma(xi^n*yi)
+            Y[i] += pow(count - j - 1, i) * values[j];
+        }
+    }
+    for (int i = 0; i <= degree; i++)
+    {
+        //load the values of Y as the last column of B(Normal Matrix but augmented)
+        B[i][degree + 1] = Y[i];
+    }
+
+    delete[] Y;  
+
+    int n = degree + 1;
+
+    //From now Gaussian Elimination starts(can be ignored) to solve the set of linear equations (Pivotisation)
+    for (int i = 0; i < n; i++)
+    {
+        for (int k = i + 1; k < n; k++)
+        {
+            if (B[i][i] < B[k][i])
             {
-                for (int k = 0; k < n + 1; k++)
+                for (int j = 0; j <= n; j++)
                 {
-                    // swapping mat[i][k] and mat[j][k]
-                    matrix[i][k] += matrix[j][k];
-                    matrix[j][k] = matrix[i][k] - matrix[j][k];
-                    matrix[i][k] -= matrix[j][k];
+                    long double temp = B[i][j];
+                    B[i][j] = B[k][j];
+                    B[k][j] = temp;
                 }
             }
         }
     }
-   
-    // performing Gaussian elimination
+
+
+    //loop to perform the gauss elimination
     for (int i = 0; i < n - 1; i++)
     {
-        for (int j = i + 1; j < n; j++)
+        for (int k = i + 1;k < n;k++)
         {
-            long double f = matrix[j][i] / matrix[i][i];
-            for (int k = 0; k < n + 1; k++)
+            long double t = B[k][i] / B[i][i];
+            //make the elements below the pivot elements equal to zero or elimnate the variables
+            for (int j = 0; j <= n; j++)
             {
-                matrix[j][k] -= f * matrix[i][k];
+                B[k][j] = B[k][j] - t * B[i][j];
             }
         }
     }
+
+    //back-substitution
+    long double* coefs = new long double[n];
+    for (int i = 0; i < n; i++)
+    {
+        coefs[i] = 0;
+    }
+    for (int i = n - 1;i >= 0;i--)
+    {
+        //x is an array whose values correspond to the values of x,y,z..
+        coefs[i] = B[i][n];
+
+        //make the variable to be calculated equal to the rhs of the last equation
+        for (int j = 0;j < n;j++)
+        {
+            //then subtract all the lhs values except the coefficient of the variable whose value is being calculated
+            if (j != i)
+            {
+                coefs[i] -= B[i][j] * coefs[j];
+            }
+        }
+        //now finally divide the rhs by the coefficient of the variable to be calculated
+        coefs[i] = coefs[i] / B[i][i];
+    }
+
+    for (int i = 0; i < degree + 1; i++)
+    {
+        delete[] B[i];
+    }
+    delete[] B;
     
-    // Backward substitution for discovering values of unknowns
-    long double* coefs = new long double[degree + 1];
-    for (int i = n - 1; i >= 0; i--)
-    {
-        coefs[i] = matrix[i][n];
-
-        for (int j = i + 1; j < n; j++)
-        {
-            if (i != j)
-            {
-                coefs[i] -= matrix[i][j] * coefs[j];
-            }
-        }
-        coefs[i] /= matrix[i][i];
-    }
-
-    for (int m = 0; m < degree + 1; m++)
-    {
-        delete[] matrix[m];
-    }
-    delete[] matrix;
-
     return new Polynom(coefs, degree);
 }

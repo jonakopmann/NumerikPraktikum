@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void WriteFile(const char* fileName, double** values, int counti, int countj)
+void WriteFile(const char* fileName, long double** values, int counti, int countj)
 {
     ofstream stream;
     stream.open(fileName);
@@ -31,8 +31,8 @@ void WritePlotFile(const char* fileName, const char* dataFileName, const char* o
     stream.open(fileName);
     stream << "#!/usr/bin/gnuplot" << endl;
     stream << "set terminal pngcairo enhanced"<< endl;
-    stream << "set xrange [0:" << rowCount <<"]"<< endl;
-    stream << "set yrange [0:" << columnCount << "]" << endl;
+    stream << "set xrange [0:" << columnCount <<"]"<< endl;
+    stream << "set yrange [0:" << rowCount<< "]" << endl;
     stream << endl;
 
     stream << "set cblabel \"Intensity\"" << endl;

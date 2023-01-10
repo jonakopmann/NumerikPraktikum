@@ -3,36 +3,9 @@
 
 #include "Process.h"
 
-// difference quotient
-double diff(double x, Polynom* polynom)
+long double avg(long double* values, int index, int n)
 {
-    return (polynom->Function(x + H) - polynom->Function(x - H)) / (2 * H);
-}
-
-double func(double y, double r, Polynom* polynom)
-{
-    return diff(y, polynom) / sqrt(pow(y, 2) - pow(r, 2));
-}
-
-double midpoint(double a, double b, Polynom* polynom)
-{   
-    double y, retVal = 0.0;
-
-    double h = H;
-    double n = (b - a) / H;
-
-    for (int i = 0; i < n; i++)
-    {
-        y = a + (i + 0.5) * h;
-        retVal += func(y, a, polynom);
-    }
-    
-    return h * retVal;
-}
-
-double avg(double* values, int index, int n)
-{
-    double retVal = 0.0;
+    long double retVal = 0.0;
     for (int i = -n; i <= n; i++)
     {
         retVal += values[index + i];
@@ -40,26 +13,38 @@ double avg(double* values, int index, int n)
     return (1.0 / (2 * n + 1)) * retVal;
 }
 
-/// @brief 
-/// @param values 
-/// @param count 
-/// @param width 
-void Smooth(double* values, int count, int width)
+// difference quotient
+long double diff(long double x, Polynom* polynom)
 {
-    int n = (width - 1) / 2;
-    for (int i = n; i <= count - n; i++)
+    return (polynom->Function(x + H) - polynom->Function(x - H)) / (2 * H);
+}
+
+long double func(long double y, long double r, Polynom* polynom)
+{
+    long double d = diff(y, polynom);
+    long double t = sqrt(y * y - r * r);
+    return d / t;
+}
+
+long double midpoint(long double a, long double b, Polynom* polynom)
+{   
+    long double retVal = 0.0;
+
+    for (long double y = a + DY; y < b; y += DY)
     {
-        values[i] = avg(values, i, n);
+        retVal += DY * func(y, a, polynom);
     }
+    
+    return retVal;
 }
 
 /// @brief 
 /// @param values 
 /// @param symmetry 
 /// @return 
-double* Interpolate(double* values, int symmetry)
+long double* Interpolate(long double* values, int symmetry)
 {
-    double* retVal = new double[symmetry + 1];
+    long double* retVal = new long double[symmetry + 1];
 
     for (int i = 0; i <= symmetry; i++)
     {
@@ -70,13 +55,26 @@ double* Interpolate(double* values, int symmetry)
 }
 
 /// @brief 
+/// @param values 
+/// @param count 
+/// @param width 
+void Smooth(long double* values, int count, int width)
+{
+    int n = (width - 1) / 2;
+    for (int i = n; i < count - n; i++)
+    {
+        values[i] = avg(values, i, n);
+    }
+}
+
+/// @brief 
 /// @param polynom 
 /// @param radius 
 /// @param maxRadius 
 /// @return 
-double Convert(Polynom* polynom, int radius, int maxRadius)
+long double Convert(Polynom* polynom, int radius, int maxRadius)
 {
-    const double factor = -1.0 / M_PI;
+    const long double factor = -1.0 / M_PI;
 
     return factor * midpoint(radius, maxRadius, polynom);
 }

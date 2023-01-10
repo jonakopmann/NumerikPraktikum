@@ -1,4 +1,3 @@
-#include <cmath>
 #include <iomanip>
 #include <iostream>
 
@@ -10,6 +9,29 @@
 
 using namespace std;
 
+void printProgress(double progress, int barWidth)
+{
+    std::cout << "[";
+    int pos = barWidth * progress;
+    for (int i = 0; i < barWidth; ++i)
+    {
+        if (i <= pos)
+        {
+            std::cout << "|";
+        }
+        else
+        {
+            std::cout << " ";
+        }
+    }
+    std::cout << "] " << int(progress * 100.0) << " %\r";
+    std::cout.flush();
+    if (progress == 1)
+    {
+        std::cout << std::endl;
+    }
+}
+
 int main()
 {
     // set up cout
@@ -17,60 +39,85 @@ int main()
     cout.setf(ios::scientific);
 
 #if DEBUG
-    const int degree = 7;
+    const int degree = 9;
     const char* fileName = "../FlammenbilderRohdaten/Hauptflamme.txt";
-    const char* outFileName = "../FlammenbilderRohdaten/Hauptflamme_Radial.txt";
     const int symmetry = SYMMETRY_MAIN;
+    const int deleteValues = 10;
+    const int width = 9;
 #else
+    // name of the file where the data is stored
     char* fileName;
     cout << "input file name" << endl;
     cin >> fileName;
+
+    // degree of the polynom
     int degree;
-    cout << "input degree" << endl;
+    cout << "input degree for polynom" << endl;
     cin >> degree;
-    const int symmetry = SYMMETRY_MAIN;
-    const char* outFileName = "../FlammenbilderRohdaten/out.txt";
+
+    // width for smoothing
+    int width;
+    cout << "input width for smoothing" << endl;
+    cin >> width;
+
+    // number of values from the middle which should get deleted
+    int deleteValues;
+    cout << "input deleteValues" << endl;
+    cin >> deleteValues;
+
+    // symmetry axis of the flame
+    int symmetry;
+    if (string(fileName).find("Hauptlamme") != -1)
+    {
+        symmetry = SYMMETRY_MAIN;
+    }
+    else
+    {
+        symmetry = SYMMETRY_PILOT;
+    }
 #endif
-    
-    cout << "reading in values" << endl;
 
+    // name of the file that gets written with the newly calculated values
+    const char* outFileName = "../FlammenbilderRohdaten/out.txt";
+    
+    cout << "reading in values ...";
+
+    // read the values of the distribution from the file into an array and parse the row/column count
     int rowCount, columnCount;
-    double** transverseDistribution = ReadFile(fileName, &rowCount, &columnCount);
+    long double** transverseDistribution = ReadFile(fileName, &rowCount, &columnCount);
 
+    // the maximum radius is the same as the symmetry axis
     int maxRad = symmetry;
-    double** reconstructed = new double*[rowCount];
-    
-    cout << "processing values" << endl;
 
-    long double maxDiff = -__DBL_MAX__, diff = 0;
+    // array to hold in the reconstructed distribution
+    long double** reconstructed = new long double* [rowCount];
+    
+    cout << "\rprocessing values:" << endl;
+
     for (int i = 0; i < rowCount; i++)
     {
-        double* row = transverseDistribution[i];
+        // progress bar
+        printProgress(i / double(rowCount - 1), 70);
+        
+        long double* row = transverseDistribution[i];
 
-        double* interpolated = Interpolate(row, symmetry);
+        long double* interpolated = Interpolate(row, symmetry);
 
         Smooth(interpolated, symmetry + 1, 9);
-        
+
         Polynom* polynom = PolynomialFit(interpolated, symmetry + 1, degree);
 
-#if DEBUG
-        //polynom->Print();
-        
-        // diff between polynom and real values
-        for (int i = 0; i < symmetry + 1; i++)
-        {
-            diff += abs(interpolated[i] - polynom->Function(i));
-            //if (diff > maxDiff)
-            {
-                //maxDiff = diff;
-            }
-        }
-#endif
-        
-        reconstructed[i] = new double[maxRad * 2 + 1];
+        reconstructed[i] = new long double[maxRad * 2 + 1];
         for (int r = 0; r <= maxRad; r++)
         {
-            reconstructed[i][maxRad - r] = Check(Convert(polynom, r, maxRad));
+            if (r < deleteValues)
+            {
+                reconstructed[i][maxRad - r] = 0;
+            }
+            else
+            {
+                reconstructed[i][maxRad - r] = Check(Convert(polynom, r, maxRad));
+            }
             reconstructed[i][maxRad + r] = reconstructed[i][maxRad - r];
         }
 
@@ -79,11 +126,10 @@ int main()
         delete[] interpolated;
     }
 
-#if DEBUG
-    cout << "diff: " << diff / (rowCount * symmetry + 1) << endl;
-#endif
-
+    // write reconstructed distribution to file
     WriteFile(outFileName, reconstructed, rowCount, maxRad * 2 + 1);
+
+    // write gnuplot script
     WritePlotFile("../FlammenbilderRohdaten/gnuplot", outFileName, "test.png", rowCount, maxRad * 2 + 1);
 
     cout << "data written to " << outFileName << endl;
