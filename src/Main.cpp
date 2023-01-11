@@ -76,7 +76,7 @@ int main()
 #endif
 
     // Name der Datei der Radialverteilung
-    const char* outFileName = "../FlammenbilderRohdaten/out.txt";
+    const char* outFileName = "out.txt";
     
     std::cout << "reading in values ...\r";
 
@@ -131,9 +131,9 @@ int main()
     WriteFile(outFileName, reconstructed, rowCount, maxRad * 2 + 1);
 
     // GnuPlot-Skript schreiben
-    WritePlotFile("../FlammenbilderRohdaten/gnuplot", outFileName, "Radialverteilung.png", rowCount, maxRad * 2 + 1);
+    WritePlotFile("gnuplot", outFileName, "Radialverteilung.png", rowCount, maxRad * 2 + 1);
 
-    system("gnuplot ../FlammenbilderRohdaten/gnuplot");
+    system("gnuplot gnuplot");
 
     std::cout << "data written to " << outFileName << std::endl;
 
