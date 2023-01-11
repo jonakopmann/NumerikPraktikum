@@ -3,6 +3,6 @@
 
 void WriteFile(const char* fileName, long double** values, int counti, int countj);
 
-void WritePlotFile(const char* fileName, const char* dataFileName, const char* outFileName, int rowCount, int columnCount);
+void WritePlotFile(const char* fileName, const char* dataFileName, const char* outFileName, const char* titel, int rowCount, int columnCount);
 
 #endif

@@ -36,7 +36,7 @@ void WriteFile(const char* fileName, long double** values, int rowCount, int col
 /// @param outFileName Name des visualiserten Plot
 /// @param rowCount Zeilenanzahl
 /// @param columnCount Spaltenanzahl
-void WritePlotFile(const char* fileName, const char* dataFileName, const char* outFileName, int rowCount, int columnCount)
+void WritePlotFile(const char* fileName, const char* dataFileName, const char* outFileName, const char* titel, int rowCount, int columnCount)
 {
     ofstream stream;
     stream.open(fileName);
@@ -55,7 +55,7 @@ void WritePlotFile(const char* fileName, const char* dataFileName, const char* o
     stream << "set ylabel 'Hight/Pixel'" << endl;
     stream << endl;
 
-    stream << "set title \"Test\"" << endl;
+    stream << "set title \"" << titel << "\"" << endl;
     stream << "set out \""  << outFileName << "\"" << endl;
     stream << "plot \"" << dataFileName << "\" matrix with image" << endl;
     stream.close();

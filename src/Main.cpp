@@ -131,7 +131,7 @@ int main()
     WriteFile(outFileName, reconstructed, rowCount, maxRad * 2 + 1);
 
     // GnuPlot-Skript schreiben
-    WritePlotFile("gnuplot", outFileName, "Radialverteilung.png", rowCount, maxRad * 2 + 1);
+    WritePlotFile("gnuplot", outFileName, "Radialverteilung.png", "Radialverteilung", rowCount, maxRad * 2 + 1);
 
     system("gnuplot gnuplot");
 
