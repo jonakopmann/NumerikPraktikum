@@ -7,7 +7,6 @@
 #include "Process.h"
 #include "Utils.h"
 
-using namespace std;
 // Funktion für Progressbar
 void printProgress(double progress, int barWidth)
 {
@@ -34,35 +33,35 @@ void printProgress(double progress, int barWidth)
 
 int main()
 {
-    cout.precision(15);
-    cout.setf(ios::scientific);
+    std::cout.precision(15);
+    std::cout.setf(std::ios::scientific);
 
 #if DEBUG
     const int degree = 9;
-    string fileName = "../FlammenbilderRohdaten/Hauptflamme.txt";
+    std::string fileName = "../FlammenbilderRohdaten/Hauptflamme.txt";
     const int symmetry = SYMMETRY_MAIN;
-    const int deleteValues = 10;
+    const int deleteValues = 5;
     const int width = 9;
 #else
     // Name des Files, wo Werte gespeichert werden
-    string fileName;
-    cout << "input file name" << endl;
-    cin >> fileName;
+    std::string fileName;
+    std::cout << "input file name" << std::endl;
+    std::cin >> fileName;
 
     // Polynomgrad
     int degree;
-    cout << "input degree for polynom" << endl;
-    cin >> degree;
+    std::cout << "input degree for polynom" << std::endl;
+    std::cin >> degree;
 
     // Breite für Glättung
     int width;
-    cout << "input width for smoothing" << endl;
-    cin >> width;
+    std::cout << "input width for smoothing" << std::endl;
+    std::cin >> width;
 
     // Anzahl der Werte an der Symmetrieachse, die gelöscht werden sollen
     int deleteValues;
-    cout << "input deleteValues" << endl;
-    cin >> deleteValues;
+    std::cout << "input deleteValues" << std::endl;
+    std::cin >> deleteValues;
 
     // Symmetrieachse der Flamme
     int symmetry;
@@ -79,7 +78,7 @@ int main()
     // Name der Datei der Radialverteilung
     const char* outFileName = "../FlammenbilderRohdaten/out.txt";
     
-    cout << "reading in values ...";
+    std::cout << "reading in values ...\r";
 
     // Herausfinden der Dimension und Einlesen der Werte in ein Array für Querverteilung
     int rowCount, columnCount;
@@ -91,7 +90,8 @@ int main()
     // Array für die Radialverteilung
     long double** reconstructed = new long double* [rowCount];
     
-    cout << "\rprocessing values:" << endl;
+    std::cout.flush();
+    std::cout << "processing values:" << std::endl;
 
     for (int i = 0; i < rowCount; i++)
     {
@@ -120,6 +120,8 @@ int main()
             reconstructed[i][maxRad + r] = reconstructed[i][maxRad - r];
         }
 
+        Smooth(reconstructed[i], maxRad * 2 + 1, width);
+
         delete polynom;
         
         delete[] interpolated;
@@ -131,7 +133,7 @@ int main()
     // write gnuplot script
     WritePlotFile("../FlammenbilderRohdaten/gnuplot", outFileName, "test.png", rowCount, maxRad * 2 + 1);
 
-    cout << "data written to " << outFileName << endl;
+    std::cout << "data written to " << outFileName << std::endl;
     
     for (int i = 0; i < rowCount; i++)
     {
