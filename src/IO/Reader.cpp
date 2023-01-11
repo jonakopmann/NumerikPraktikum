@@ -32,6 +32,7 @@ long double** ReadFile(string fileName, int* outRowCount, int* outColumnCount)
     std::streampos startPos = stream.tellg();     
 
     // Reihenanzahl bestimmen
+    *outRowCount = 0;
     while (getline(stream, temp))
     {
         (*outRowCount)++;
@@ -47,9 +48,9 @@ long double** ReadFile(string fileName, int* outRowCount, int* outColumnCount)
     {
         values.push_back(d);
     }
-    if (values.size() % *outRowCount != 0)
+    if ((values.size() % (*outRowCount)) != 0)
     {
-         throw runtime_error("input file does not have the right format!");
+        throw runtime_error("input file does not have the right format!");
     }
     *outColumnCount = values.size() / *outRowCount;
 
