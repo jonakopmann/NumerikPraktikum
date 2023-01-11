@@ -127,14 +127,14 @@ int main()
         delete[] interpolated;
     }
 
-    // write reconstructed distribution to file
+    // Radialverteilung in File schreiben
     WriteFile(outFileName, reconstructed, rowCount, maxRad * 2 + 1);
 
-    // write gnuplot script
-    WritePlotFile("../FlammenbilderRohdaten/gnuplot", outFileName, "test.png", rowCount, maxRad * 2 + 1);
+    // GnuPlot-Skript schreiben
+    WritePlotFile("../FlammenbilderRohdaten/gnuplot", outFileName, "Radialverteilung.png", rowCount, maxRad * 2 + 1);
 
     std::cout << "data written to " << outFileName << std::endl;
-    
+
     for (int i = 0; i < rowCount; i++)
     {
         delete[] transverseDistribution[i];

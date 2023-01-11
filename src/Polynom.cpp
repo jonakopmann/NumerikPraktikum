@@ -17,9 +17,9 @@ Polynom::~Polynom()
     delete[] m_coefs;
 }
 
-/// @brief 
-/// @param x 
-/// @return 
+/// @brief Berechnet den Wert der Funktion an der Stelle x
+/// @param x ist Stelle, an der Funktionswert berechnet werden soll
+/// @return Funktionswert an der Stelle x
 long double Polynom::Function(long double x)
 {
     double retVal = 0;
@@ -30,7 +30,7 @@ long double Polynom::Function(long double x)
     return retVal;
 }
 
-/// @brief 
+/// @brief Gibt Funktionsgleichung aus
 void Polynom::Print()
 {
     std::cout << m_coefs[0];
@@ -41,11 +41,11 @@ void Polynom::Print()
     std::cout << std::endl;
 }
 
-/// @brief 
-/// @param values 
-/// @param count 
-/// @param degree 
-/// @return 
+/// @brief Legt ein Polynom durch die Werte
+/// @param values eingegebene Werte
+/// @param count Anzahl der Werte
+/// @param degree Polynomgrad
+/// @return Pointer zum Polynom
 Polynom* PolynomialFit(long double* values, int count, int degree)
 {       
     long double* X = new long double[2 * degree + 1];
@@ -54,37 +54,36 @@ Polynom* PolynomialFit(long double* values, int count, int degree)
         X[i] = 0;
         for (int j = 0; j < count; j++)
         {
-            //consecutive positions of the array will store N,sigma(xi),sigma(xi^2),sigma(xi^3)....sigma(xi^2n)
+            //Array speichert individuelle x-Werte (x-Werte invertieren, da Radius in der Mitte startet)
             X[i] += pow(count -1 - j, i);
         }
     }
 
-    //B is the Normal matrix(augmented) that will store the equations, 'a' is for value of the final coefficients
+    //B ist die Matrix, die die Werte speichert. Letzte Spalte für die y-Werte
     long double** B = new long double*[degree + 1];
     for (int i = 0;i <= degree;i++)
     {
         B[i] = new long double[degree + 2];
         for (int j = 0;j <= degree;j++)
         {
-            //Build the Normal matrix by storing the corresponding coefficients at the right positions except the last column of the matrix
             B[i][j] = X[i + j];
         }
     }
     delete[] X;
-    
+
+    // Letze Spale mit sigma(xj^i * yj) befüllen
     for (int i = 0; i < degree + 1; i++)
     {
         B[i][degree + 1] = 0;
         for (int j = 0; j < count;j++)
         {
-            //consecutive positions will store sigma(yi),sigma(xi*yi),sigma(xi^2*yi)...sigma(xi^n*yi)
             B[i][degree + 1] += pow(count - 1 - j, i) * values[j];
         }
     }
 
     int n = degree + 1;
 
-    //From now Gaussian Elimination starts to solve the set of linear equations
+    // Gaußsches Eliminationsverfahren startet, hier: größter Wert als Pivot-Element wählen
     for (int i = 0; i < n; i++)
     {
         for (int k = i + 1; k < n; k++)
@@ -102,21 +101,21 @@ Polynom* PolynomialFit(long double* values, int count, int degree)
     }
 
 
-    //loop to perform the gauss elimination
+    // Elemente unter dem Pivotelement zu Null setzen
     for (int i = 0; i < n - 1; i++)
     {
         for (int k = i + 1;k < n;k++)
         {
             long double t = B[k][i] / B[i][i];
-            //make the elements below the pivot elements equal to zero or elimnate the variables
+           
             for (int j = 0; j <= n; j++)
             {
-                B[k][j] = B[k][j] - t * B[i][j];
+                B[k][j] -= t * B[i][j];
             }
         }
     }
 
-    //back-substitution
+    //Rücksubstitution
     long double* coefs = new long double[n];
     for (int i = 0; i < n; i++)
     {
@@ -124,20 +123,18 @@ Polynom* PolynomialFit(long double* values, int count, int degree)
     }
     for (int i = n - 1;i >= 0;i--)
     {
-        //x is an array whose values correspond to the values of x,y,z..
         coefs[i] = B[i][n];
 
-        //make the variable to be calculated equal to the rhs of the last equation
+        //Werte über Pivo-Elementen zu Null setzen
         for (int j = 0;j < n;j++)
         {
-            //then subtract all the lhs values except the coefficient of the variable whose value is being calculated
             if (j != i)
             {
                 coefs[i] -= B[i][j] * coefs[j];
             }
         }
-        //now finally divide the rhs by the coefficient of the variable to be calculated
-        coefs[i] = coefs[i] / B[i][i];
+        // Pivotelement einsetzen
+        coefs[i] /= B[i][i];
     }
 
     for (int i = 0; i < degree + 1; i++)

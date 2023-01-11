@@ -4,12 +4,12 @@
 
 using namespace std;
 
-/// @brief 
-/// @param fileName 
-/// @param values 
-/// @param counti 
-/// @param countj 
-void WriteFile(const char* fileName, long double** values, int counti, int countj)
+/// @brief Schreibt Radialverteilung in eine Date
+/// @param fileName Name der Datei
+/// @param values Radialverteilung
+/// @param rowCount Zeilenanzahl
+/// @param columnCount Spaltenanzahl
+void WriteFile(const char* fileName, long double** values, int rowCount, int columnCount)
 {
     ofstream stream;
     stream.open(fileName);
@@ -19,9 +19,9 @@ void WriteFile(const char* fileName, long double** values, int counti, int count
         throw runtime_error("Could not open file: " + string(fileName));
     }
 
-    for (int i = 0; i < counti; i++)
+    for (int i = 0; i < rowCount; i++)
     {
-        for (int j = 0; j < countj; j++)
+        for (int j = 0; j < columnCount; j++)
         {
             stream << values[i][j] << " ";
         }
@@ -30,12 +30,12 @@ void WriteFile(const char* fileName, long double** values, int counti, int count
     stream.close();
 }
 
-/// @brief 
-/// @param fileName 
-/// @param dataFileName 
-/// @param outFileName 
-/// @param rowCount 
-/// @param columnCount 
+/// @brief Erstellt eine GnuPlot-Datei
+/// @param fileName Name der Plot-Datei
+/// @param dataFileName Name der Radialverteilungs-Datei
+/// @param outFileName Name des visualiserten Plot
+/// @param rowCount Zeilenanzahl
+/// @param columnCount Spaltenanzahl
 void WritePlotFile(const char* fileName, const char* dataFileName, const char* outFileName, int rowCount, int columnCount)
 {
     ofstream stream;

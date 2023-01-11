@@ -6,11 +6,11 @@
 
 using namespace std;
 
-/// @brief Reads all values from a file.
-/// @param fileName Name of the file which gets read.
-/// @param outRowCount The row count of the matrix.
-/// @param outColumnCount The column count of the matrix.
-/// @return The values as a double matrix.
+/// @brief Liest alle Werte von einer Datei ein
+/// @param fileName Name der Datei, die gelesen wird
+/// @param outRowCount Zeilenanzahl der Matrix
+/// @param outColumnCount Spaltenanzahl der MatrixThe column count of the matrix.
+/// @return Die eingelesenen Werte als double-Matrix
 long double** ReadFile(string fileName, int* outRowCount, int* outColumnCount)
 {
     ifstream stream;
