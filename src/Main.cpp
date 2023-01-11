@@ -47,6 +47,7 @@ int main()
     std::string fileName;
     std::cout << "input file name" << std::endl;
     std::cin >> fileName;
+    fileName = "../FlammenbilderRohdaten/" + fileName;
 
     // Polynomgrad
     int degree;
