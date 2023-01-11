@@ -133,6 +133,8 @@ int main()
     // GnuPlot-Skript schreiben
     WritePlotFile("../FlammenbilderRohdaten/gnuplot", outFileName, "Radialverteilung.png", rowCount, maxRad * 2 + 1);
 
+    system("gnuplot ../FlammenbilderRohdaten/gnuplot");
+
     std::cout << "data written to " << outFileName << std::endl;
 
     for (int i = 0; i < rowCount; i++)
