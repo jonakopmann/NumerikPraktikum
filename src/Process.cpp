@@ -5,7 +5,7 @@
 
 /// @brief Glätten eines Wertes aus einem Array
 /// @param values Array der Werte
-/// @param index Werte, der gerade geglättet wird
+/// @param index Wert, der gerade geglättet wird
 /// @param n Anzahl der Werte links und rechts davon
 /// @return geglätteter Wert
 long double avg(long double* values, int index, int n)
@@ -41,7 +41,7 @@ long double func(long double y, long double r, Polynom* polynom)
 /// @param a untere Grenze
 /// @param b obere Grenze
 /// @param polynom Pointer zum Polynom
-/// @return Werte des Integrals
+/// @return Wert des Integrals
 long double midpoint(long double a, long double b, Polynom* polynom)
 {   
     long double retVal = 0.0;
@@ -54,10 +54,10 @@ long double midpoint(long double a, long double b, Polynom* polynom)
     return retVal;
 }
 
-/// @brief 
-/// @param values 
-/// @param symmetry 
-/// @return 
+/// @brief Werte mitteln und an Symmetrieachse halbieren
+/// @param values Array der Werte
+/// @param symmetry Symmetrieachse
+/// @return Array der gemittelten und halbierten Werte
 long double* Interpolate(long double* values, int symmetry)
 {
     long double* retVal = new long double[symmetry + 1];
@@ -70,10 +70,10 @@ long double* Interpolate(long double* values, int symmetry)
     return retVal;
 }
 
-/// @brief 
-/// @param values 
-/// @param count 
-/// @param width 
+/// @brief Glättung der Werte
+/// @param values Werte, die geglättet werden
+/// @param count Anzahl der Werte, die geglättet werden
+/// @param width Breite für Glättung
 void Smooth(long double* values, int count, int width)
 {
     int n = (width - 1) / 2;

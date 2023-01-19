@@ -9,7 +9,7 @@ using namespace std;
 /// @brief Liest alle Werte von einer Datei ein
 /// @param fileName Name der Datei, die gelesen wird
 /// @param outRowCount Zeilenanzahl der Matrix
-/// @param outColumnCount Spaltenanzahl der MatrixThe column count of the matrix.
+/// @param outColumnCount Spaltenanzahl der Matrix
 /// @return Die eingelesenen Werte als double-Matrix
 long double** ReadFile(string fileName, int* outRowCount, int* outColumnCount)
 {

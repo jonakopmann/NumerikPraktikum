@@ -4,7 +4,7 @@
 
 using namespace std;
 
-/// @brief Schreibt Radialverteilung in eine Date
+/// @brief Schreibt Radialverteilung in eine Datei
 /// @param fileName Name der Datei
 /// @param values Radialverteilung
 /// @param rowCount Zeilenanzahl

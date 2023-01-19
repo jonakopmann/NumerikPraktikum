@@ -43,7 +43,7 @@ int main()
     const int deleteValues = 5;
     const int width = 9;
 #else
-    // Name des Files, wo Werte gespeichert werden
+    // Name des Files, wo Werte gespeichert sind
     std::string fileName;
     std::cout << "input file name" << std::endl;
     std::cin >> fileName;
@@ -81,7 +81,7 @@ int main()
     
     std::cout << "reading in values ...\r";
 
-    // Herausfinden der Dimension und Einlesen der Werte in ein Array für Querverteilung
+    // Herausfinden der Dimension und Einlesen der Werte in ein Array für die Querverteilung
     int rowCount, columnCount;
     long double** transverseDistribution = ReadFile(fileName, &rowCount, &columnCount);
     
@@ -107,6 +107,7 @@ int main()
 
         Polynom* polynom = PolynomialFit(interpolated, symmetry + 1, degree);
 
+        // Rekonstruieren der Radialverteilung für alle Radien
         reconstructed[i] = new long double[maxRad * 2 + 1];
         for (int r = 0; r <= maxRad; r++)
         {

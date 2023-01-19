@@ -18,7 +18,7 @@ Polynom::~Polynom()
 }
 
 /// @brief Berechnet den Wert der Funktion an der Stelle x
-/// @param x ist Stelle, an der Funktionswert berechnet werden soll
+/// @param x ist Stelle, an welcher der Funktionswert berechnet werden soll
 /// @return Funktionswert an der Stelle x
 long double Polynom::Function(long double x)
 {
@@ -30,7 +30,7 @@ long double Polynom::Function(long double x)
     return retVal;
 }
 
-/// @brief Gibt Funktionsgleichung aus
+/// @brief Gibt die Funktionsgleichung aus
 void Polynom::Print()
 {
     std::cout << m_coefs[0];
@@ -83,7 +83,7 @@ Polynom* PolynomialFit(long double* values, int count, int degree)
 
     int n = degree + 1;
 
-    // Gaußsches Eliminationsverfahren startet, hier: größter Wert als Pivot-Element wählen
+    // Gaußsches Eliminationsverfahren startet. Hier: Größter Wert als Pivot-Element wählen
     for (int i = 0; i < n; i++)
     {
         for (int k = i + 1; k < n; k++)
@@ -125,7 +125,7 @@ Polynom* PolynomialFit(long double* values, int count, int degree)
     {
         coefs[i] = B[i][n];
 
-        //Werte über Pivo-Elementen zu Null setzen
+        //Werte über Pivotelementen zu Null setzen
         for (int j = 0;j < n;j++)
         {
             if (j != i)
