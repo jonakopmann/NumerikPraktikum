@@ -6,7 +6,6 @@
 #define SYMMETRY_MAIN 254
 #define SYMMETRY_PILOT 248
 
-#define N 0.1
 #define H 0.1
 #define DY 0.1
 

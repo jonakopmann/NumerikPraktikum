@@ -48,10 +48,10 @@ long double midpoint(long double a, long double b, Polynom* polynom)
 
     for (long double y = a + DY; y < b; y += DY)
     {
-        retVal += DY * func(y, a, polynom);
+        retVal += func(y, a, polynom);
     }
     
-    return retVal;
+    return DY * retVal;
 }
 
 /// @brief Werte mitteln und an Symmetrieachse halbieren
